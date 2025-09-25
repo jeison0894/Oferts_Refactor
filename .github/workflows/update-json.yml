@@ -5,6 +5,9 @@ on:
     - cron: "0 * * * *"   # cada hora
   workflow_dispatch:      # opcional, para correrlo manualmente
 
+permissions:
+ contents: write   # 👈 necesario para poder hacer commit/push
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -13,6 +16,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: data-cache
+          token: ${{ secrets.GITHUB_TOKEN }}  
 
       - name: Fetch API
         run: |
