@@ -1,0 +1,27 @@
+name: Update JSON Cache
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # cada hora
+  workflow_dispatch:      # opcional, para correrlo manualmente
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout data-cache branch
+        uses: actions/checkout@v3
+        with:
+          ref: data-cache
+
+      - name: Fetch API
+        run: |
+          curl -s "https://script.google.com/macros/s/AKfycbx2sOSzU9HlAfSvcFGTVrnyND_L0gCSpllDfPigEjHyyBc20RpK3kPGTUbqm_MeQdSRHg/exec" > data.json
+
+      - name: Commit & Push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add data.json
+          git commit -m "update data.json" || echo "no changes"
+          git push origin data-cache
